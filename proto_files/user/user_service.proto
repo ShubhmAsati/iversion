@@ -1,0 +1,81 @@
+syntax="proto3";
+
+package user_grpc;
+
+//service defination
+service UserService{
+  rpc add(User) returns (AddUserResponse);
+  rpc uploadProfilePic(UploadProfilePicRequest) returns (StatusOkResponse);
+  rpc loadMyMessages(User) returns (MyMessages);
+  rpc getUserByUserId(getUserByUserIdRequest) returns (User);
+  rpc update(User) returns (StatusOkResponse);
+  rpc searchUsersByUserName(getUserByUserNameRequest) returns (searchUsersByUserNameResponse);
+  rpc getExistingUserNames(getExistingUserNamesRequest) returns (getExistingUserNamesResponse);
+}
+
+message User {
+  string firstName=1;
+  string userId=2;
+  string profilePic=3;
+  string mobileNo=4;
+  string status=5;
+  string userName=6;
+}
+
+
+message AddUserResponse{
+  string userId=1;
+  Error err=2;
+}
+
+message UploadProfilePicRequest{
+  string profilePicPath=1;
+  User user=2;
+}
+
+message MyMessages{
+  repeated UserMsg userMsg=1;
+  Error error=2;
+}
+
+message UserMsg {
+  string fromUserId=1;
+  string msg=2;
+}
+
+
+message getUserByUserIdRequest{
+  string userId=1;
+}
+
+message getUserByUserNameRequest{
+  string userName=1;
+}
+
+message searchUsersByUserNameResponse{
+  repeated User user=1;
+}
+
+message UserName {
+  string userName=1;
+}
+
+message  getExistingUserNamesRequest{
+  string sample=1;
+}
+
+message getExistingUserNamesResponse{
+  repeated UserName userName=1;
+}
+
+message StatusOkResponse{
+  string message=1;
+  int32 successCode=2;
+  Error err=3;
+}
+
+message Error{
+  string errorMsg =1;
+  int32 errorCode=2;
+  string errorDetails=3;
+}

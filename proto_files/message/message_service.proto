@@ -1,0 +1,64 @@
+syntax="proto3";
+package message_grpc;
+
+service Message{
+    rpc Connect(UserById) returns (stream UserChatMessage);
+    rpc BroadCastMessage(UserChatMessage) returns (MsgSent);
+    rpc SendMessage(UserChatMessage) returns (MsgSent);
+    rpc RemoveConnection(UserById) returns(StatusOkResponse);
+    rpc emitWebRTCevents(emitWebRTCeventsRequest) returns (StatusOkResponse);
+}
+
+message UserById{
+    string userId=1;
+}
+message Msg{
+    string msgId=1;
+    string message=2;
+    string UtcTimestamp=3;
+}
+
+message UserChatMessage{
+    enum notification_type{
+        MESSAGE=0;
+        IMAGE=1;
+        FILE=2;
+        WEBRTCEVENT=3;
+    };
+    notification_type nt=1;
+    bool isGroup=2;
+    string fromUserId=3;
+    string toUserId=4;
+    Msg msg=6;
+    string chatId=7;
+    string sentUtcTimeStamp=8;
+    string recivedUtdTimeStamp=9;
+    string iceCandidate=10;
+    string dynamicJSONString=11;
+    string webRTCEventType=12;
+}
+
+message MsgSent{
+    bool isSent=1;
+    string sentUtcTimeStamp=2;
+}
+
+message StatusOkResponse{
+    string message=1;
+    int32 successCode=2;
+    Error err=3;
+}
+
+message Error{
+    string errorMsg =1;
+    int32 errorCode=2;
+    string errorDetails=3;
+}
+
+message emitWebRTCeventsRequest {
+    string fromUserId=1;
+    string toUserId=2;
+    string ICECandidate=3;
+    string eventType=4;
+    string dynamicPayload=5;
+}
